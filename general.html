@@ -1,0 +1,70 @@
+<table id="controls">
+ <tr>
+  <td>rows</td>
+  <td><input type="text" id="rows"/></td>
+ </tr>
+ <tr>
+  <td>columns</td>
+  <td><input type="text" id="columns"/></td>
+ </tr>
+ <tr>
+  <td>divide rows</td>
+  <td><input type="text" id="dividerows"/></td>
+ </tr>
+ <tr>
+  <td>divide columns</td>
+  <td><input type="text" id="dividecolumns"/></td>
+ </tr>
+ <tr>
+  <td>image<input type="radio" name="group" value="image">textbox<input type="radio" name="group" value="textbox"></td>
+ </tr>
+ <tr>
+  <td><button>rowscolumns</button></td>
+  <td><button>save</button></td>
+ </tr>
+</table>
+<table id="result"></table>
+<style>
+ #result td
+ {
+    border:1px solid;
+ }
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+ $("#result").css("width",window.innerWidth||document.documentElement.clientWidth||document.body.clientWidth)
+ $("#result").css("height",window.innerHeight||document.documentElement.clientHeight||document.body.clientHeight-$("#controls").css("height").substring(0,$("#controls").css("height").indexOf("px")))
+ $("button").click(function(){
+  s=""
+  for(i=0;i<$("#rows").val();i++)
+  {
+   s+="<tr>"
+   for(j=0;j<$("#columns").val();j++)
+    s+='<td class="outer"><input type="text"/></td>'
+   s+="</tr>"
+  }
+  $("#result").html(s)
+ })
+
+ $("#result").on("click","td",function(){
+  s=""
+  s+="<table>"
+  for(i=0;i<$("#dividerows").val();i++)
+  {
+   s+="<tr>"
+   for(j=0;j<$("#dividecolumns").val();j++)
+    s+='<td class="inner"></td>'
+   s+="</tr>"
+  }
+  s+="</table>"
+  $(this).html(s)
+  $(".inner").css("width",$(this).closest("td").css("width").substring(0,$(this).closest("td").css("width").indexOf("px"))/$("#dividerows").val())
+  $(".inner").css("height",$(this).closest("td").css("height").substring(0,$(this).closest("td").css("height").indexOf("px"))/$("#dividecolumns").val())
+  if($("input[name=group]:checked").val()=="image")
+   $(".inner").html("<a><img/></a>")
+  if($("input[name=group]:checked").val()=="textbox")
+   $(".inner").html("<input type='text'/>")
+  $(".outer").css("width",$(".inner").css("width"))
+  $(".outer").css("height",$(".inner").css("height"))
+ })
+</script>
